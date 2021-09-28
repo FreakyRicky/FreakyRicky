@@ -1,0 +1,23 @@
+clc;
+clear;
+close all;
+
+%load the dataset
+load iris_dataset;
+
+[X,y] = iris_dataset;
+X = X';
+y = y';
+y = vec2ind(y')';
+
+data = [X y];
+
+% PCA Coefficients
+% Score returns the principal component scores
+% Latent returns the eigenvalues of the covariance matrix of X.
+[coeff, score, latent] = pca(X);
+coeff
+
+%Using the first two components
+[U, Z] = pca(X,'NumComponents',4);
+scatter(Z(:,1),Z(:,2),20,y,'filled')
