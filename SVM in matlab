@@ -1,0 +1,26 @@
+clear all;
+clc;
+% loading the dataset
+load('dataset.mat')
+x = data;
+y = groups;
+
+% Plot the data;
+figure;
+gscatter(x(:,1),x(:,2),y);
+hold on
+%Train an SVM classifier using the modified data set
+
+SVMModel = fitcsvm(x,y,'Standardize',true,'KernelFunction','RBF',...
+    'KernelScale','auto');
+
+h = 0.02; % Mesh grid step size
+[X1,X2] = meshgrid(min(x(:,1)):h:max(x(:,1)),...
+    min(x(:,2)):h:max(x(:,2)));
+[~,score] = predict(SVMModel,[X1(:),X2(:)]);
+scoreGrid = reshape(score(:,2),size(X1,1),size(X2,2));
+%contour(X1,X2,scoreGrid);
+%colorbar;
+%Plot the observations and the decision boundary
+contour(X1,X2,scoreGrid,[0 0]);
+hold off
