@@ -1,0 +1,56 @@
+data = load('ex1data1.txt'); % loading training data
+
+%initailizing variables and matrices
+x = data(:,1);
+y = data(:,2);
+m = length(y); % number of training examples
+theta = zeros(2,1); % initial weights [0,0]
+num_of_iterations = 1000; % iterations needed for gradient descent
+alpha = 0.01; % learning rate
+
+% plot the data
+plot(x,y,'bx', 'MarkerSize',10);
+title('Training examples');
+xlabel('X----->');
+ylabel('y----->');
+
+% cost function
+function j = CalculatingCostfunct(x, y , theta)
+
+    m = length(y);
+    
+    h = x*theta; % compute the hypothesis matrix
+    
+    %calculating the cost
+    j = 1/(2*m)*sum((h-y).^2);
+end
+
+% gradient descent function
+function [theta, j_history] = GradientDescent(x, y, theta, alpha, num_of_iterations)
+
+    m = length(y);
+    j_history = zeros(num_of_iterations, 1);
+    
+    for i=1: num_of_iterations
+        h = x*theta; %hypothesis vector
+        t1 = theta(1) - alpha*(1/m)*sum(h - y);
+        t2 = theta(2) - alpha*(1/m)*sum((h - y).*x(:,2));
+        theta(1) = t1;
+        theta(2) = t2;
+        
+        j_history(i) = CalculatingCostfunct(x,y, theta);
+	end
+end
+
+% adding ones column to x
+x = [ones(m,1), data(:,1)];
+j = CalculatingCostfunct(x,y,theta);
+
+%running gradient descent
+[theta, j_history] = GradientDescent(x,y, theta,alpha, num_of_iterations);
+
+%plotting linear regression line
+hold on;
+plot(x(:,2), x*theta,'-');
+legend('Training Data','Linear Regression');
+hold off;
